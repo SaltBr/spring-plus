@@ -2,9 +2,8 @@ package org.example.expert.domain.todo.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.expert.client.WeatherClient;
-import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
-import org.example.expert.domain.manager.dto.response.ManagerResponse;
+import org.example.expert.domain.log.service.LogService;
 import org.example.expert.domain.security.CustomUserPrincipal;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
@@ -14,16 +13,13 @@ import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,10 +27,12 @@ import java.util.List;
 public class TodoService {
 
     private final TodoRepository todoRepository;
+    private final LogService logService;
     private final WeatherClient weatherClient;
 
     public TodoSaveResponse saveTodo(CustomUserPrincipal customUserPrincipal, TodoSaveRequest todoSaveRequest) {
         User user = customUserPrincipal.getUser();
+        logService.save(user.getNickname() + "의 매니저 등록 요청이 들어왔습니다.");
 
         String weather = weatherClient.getTodayWeather();
 
